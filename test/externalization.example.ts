@@ -1,26 +1,4 @@
-# extol
-
-**Simple decorator-driven TypeScript externalization library.**
-
-Install with:
-
-```bash
-npm i extol
-```
-
-## Functionalities
-
-- Read environment variables, `.env` files (via the `dotenv` library) or regress to default values
-- Type safety
-- Read values either from file (for secrets)
-- Read complex types from markup formats, e.g. JSON
-
-## Usage
-
-- run `npm run example`
-
-```ts
-import extol from 'extol';
+import extol from '../src/externalization';
 
 /**
  * Example class to show automated externalization
@@ -81,4 +59,3 @@ class ExampleConfiguration {
  */
 const c = new ExampleConfiguration();
 console.log(c.toString());
-```
