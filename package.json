@@ -13,6 +13,9 @@
     "type": "git",
     "url": "git+https://github.com/csabasulyok/extol.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "tsc -p tsconfig.build.json",
