@@ -45,7 +45,7 @@ export const fileVariant = (envVarName: string): string => {
  * De-facto configuration loading.
  * Should be called only once for each key/setting.
  */
-const loadConfig = <T>(propertyKey: string | symbol, defaultValue: T, options: ExtolDecoratorProperties = {}): T => {
+export const load = <T = string>(propertyKey: string | symbol, defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): T => {
   // decide environment variable name
   const envVarName = options.envVarName || constantCase(String(propertyKey));
 
@@ -92,7 +92,7 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (!initialized) {
-          value = loadConfig(propertyKey, defaultValue, options);
+          value = load(propertyKey, defaultValue, options);
           initialized = true;
         }
         return value;

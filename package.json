@@ -1,11 +1,11 @@
 {
   "name": "extol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple decorator-driven TypeScript externalization library",
   "author": "Csaba Sulyok <csaba.sulyok@gmail.com>",
   "license": "ISC",
-  "types": "./dist/externalization.d.ts",
-  "main": "./dist/externalization.js",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
@@ -21,7 +21,8 @@
     "build": "tsc -p tsconfig.build.json",
     "cb": "pnpm clean && pnpm build",
     "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}' --quiet --fix",
-    "example": "DOTENV_CONFIG_PATH=./test/.env nodemon -r dotenv/config test/externalization.example.ts"
+    "example:simple": "DOTENV_CONFIG_PATH=./test/.env node -r ts-node/register -r dotenv/config test/simple.example.ts",
+    "example:decorator": "DOTENV_CONFIG_PATH=./test/.env node -r ts-node/register -r dotenv/config test/decorator.example.ts"
   },
   "dependencies": {
     "auto-bind": "^4.0.0",

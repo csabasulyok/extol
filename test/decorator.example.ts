@@ -1,4 +1,4 @@
-import extol from '../src/externalization';
+import extol from '../src';
 
 /**
  * Example class to show automated externalization
