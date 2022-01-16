@@ -20,6 +20,13 @@ class ExampleConfiguration {
   port: number;
 
   /**
+   * Prefixes may be added to the name.
+   * In this case, the MESSAGING_PROTOCOL env var is read
+   */
+  @extol('amqp', { envVarPrefix: 'messaging' })
+  protocol: string;
+
+  /**
    * Override used environment variable,
    * otherwise it's deduced from property name.
    */
@@ -46,6 +53,7 @@ class ExampleConfiguration {
     return `ExampleConfiguration {
       host: ${this.host}, type=${this.host?.constructor?.name},
       port: ${this.port}, type=${this.port?.constructor?.name},
+      protocol: ${this.protocol}, type=${this.protocol?.constructor?.name},
       username: ${this.username}, type=${this.username?.constructor?.name},
       password: ${this.password}, type=${this.password?.constructor?.name},
       rememberPassword: ${this.rememberPassword}, type=${this.rememberPassword?.constructor?.name}

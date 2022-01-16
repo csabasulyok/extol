@@ -21,8 +21,9 @@
     "build": "tsc -p tsconfig.build.json",
     "cb": "pnpm clean && pnpm build",
     "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}' --quiet --fix",
-    "example:simple": "DOTENV_CONFIG_PATH=./test/.env node -r ts-node/register -r dotenv/config test/simple.example.ts",
-    "example:decorator": "DOTENV_CONFIG_PATH=./test/.env node -r ts-node/register -r dotenv/config test/decorator.example.ts"
+    "example:simple": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/simple.example.ts",
+    "example:decorator": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/decorator.example.ts",
+    "example:decoratorprefix": "DOTENV_CONFIG_PATH=./examples/prefixed.env node -r ts-node/register -r dotenv/config examples/decoratorprefix.example.ts"
   },
   "dependencies": {
     "auto-bind": "^4.0.0",
@@ -60,7 +61,7 @@
     "watch": [
       ".env",
       "src/*.*",
-      "test/*.*"
+      "examples/*.*"
     ]
   }
 }

@@ -10,9 +10,15 @@ dotenv.config();
 export type ExtolDecoratorProperties = {
   /**
    * Override environment variable name to be checked for a property.
-   * If unset, "constant case" of property name is take.
+   * If unset, "constant case" of property name is taken.
    */
   envVarName?: string;
+  /**
+   * Prefix given for environment variable.
+   * Should be used when rest of name should be taken from property.
+   * Ignored if envVarName is set.
+   */
+  envVarPrefix?: string;
   /**
    * Set to true so any overriding value (from file or env var)
    * is treated as JSON and parsed when reading the config.
@@ -47,7 +53,8 @@ export const fileVariant = (envVarName: string): string => {
  */
 export const load = <T = string>(propertyKey: string | symbol, defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): T => {
   // decide environment variable name
-  const envVarName = options.envVarName || constantCase(String(propertyKey));
+  const finalPropertyKey = options.envVarPrefix ? `${options.envVarPrefix}_${String(propertyKey)}` : String(propertyKey);
+  const envVarName = options.envVarName || constantCase(finalPropertyKey);
 
   // get string version from file content or environment variable
   let stringValue: string;
@@ -92,12 +99,28 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (!initialized) {
+          // check if prefix added
+          const prefix = (target as Record<string, unknown>)?.__prefix as string;
+          if (prefix) {
+            options.envVarPrefix = options.envVarPrefix || prefix;
+          }
           value = load(propertyKey, defaultValue, options);
           initialized = true;
         }
         return value;
       },
     });
+  };
+};
+
+/**
+ * Class decorator, which sets prefix for any extoled value in class
+ */
+export const extolPrefix = (prefix: string): ClassDecorator => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return (ctr: Function) => {
+    // eslint-disable-next-line no-underscore-dangle
+    ctr.prototype.__prefix = prefix;
   };
 };
 
