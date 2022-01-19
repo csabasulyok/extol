@@ -22,6 +22,7 @@
     "cb": "pnpm clean && pnpm build",
     "lint": "eslint 'src/**/*.{js,ts,jsx,tsx}' --quiet --fix",
     "example:simple": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/simple.example.ts",
+    "example:simpleobject": "DOTENV_CONFIG_PATH=./examples/prefixed.env node -r ts-node/register -r dotenv/config examples/simpleobject.example.ts",
     "example:decorator": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/decorator.example.ts",
     "example:decoratorprefix": "DOTENV_CONFIG_PATH=./examples/prefixed.env node -r ts-node/register -r dotenv/config examples/decoratorprefix.example.ts"
   },

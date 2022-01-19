@@ -32,6 +32,17 @@ export type ExtolDecoratorProperties = {
 };
 
 /**
+ * Object decorator settings
+ */
+export type ExtolObjectDecoratorProperties = {
+  /**
+   * Common prefix given for all environment variables from an object.
+   * Should be used when rest of name should be taken from property.
+   */
+  envVarPrefix?: string;
+};
+
+/**
  * Check if _FILE suffixed version is set for a given environment variable.
  * If so, read its value into a string, otherwise check the original env var.
  */
@@ -88,20 +99,61 @@ export const load = <T = string>(propertyKey: string | symbol, defaultValue: T =
 };
 
 /**
+ * Load object based on name-to-defaultvalue object.
+ */
+export const loadObject = (
+  keysToDefault: Record<string, unknown>,
+  options: ExtolObjectDecoratorProperties = {},
+): Record<string, unknown> => {
+  const keysToDefaultEntries = Object.entries(keysToDefault);
+  const keysToValueEntries = keysToDefaultEntries.map(([key, val]) => [key, load(key, val, options)]);
+  const keysToValues = Object.fromEntries(keysToValueEntries);
+  return keysToValues;
+};
+
+/**
  * Property decorator function to auto-load prop value
  * from environment variable or file.
  */
 const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
-  return (target: unknown, propertyKey: string | symbol) => {
-    // check if prefix added
-    const prefix = (target as Record<string, unknown>)?.__prefix as string;
-    if (prefix) {
-      options.envVarPrefix = options.envVarPrefix || prefix;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return (target: Object, propertyKey: string | symbol) => {
+    let initialized = false;
+    let value: T;
+
+    // add managed key to prototype list
+    if (!target.constructor.prototype.__extolProps) {
+      target.constructor.prototype.__extolProps = [];
     }
-    const value = load(propertyKey, defaultValue, options);
-    target[propertyKey] = value;
+    target.constructor.prototype.__extolProps.push(propertyKey);
+
+    // target[propertyKey] = defaultValue;
+    Object.defineProperty(target, propertyKey, {
+      get: () => {
+        if (!initialized) {
+          // check if prefix added
+          const prefix = target.constructor.prototype.__extolPrefix as string;
+          if (prefix) {
+            options.envVarPrefix = options.envVarPrefix || prefix;
+          }
+          value = load(propertyKey, defaultValue, options);
+          initialized = true;
+        }
+        return value;
+      },
+    });
   };
 };
+
+export abstract class WithExtolProps<T> {
+  extolProps(): T {
+    const propsList = this.constructor?.prototype?.__extolProps;
+    if (!propsList) {
+      return {} as T;
+    }
+    return Object.fromEntries(propsList.map((key) => [key, this[key]])) as T;
+  }
+}
 
 /**
  * Class decorator, which sets prefix for any extoled value in class
@@ -110,7 +162,7 @@ export const extolPrefix = (prefix: string): ClassDecorator => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (ctr: Function) => {
     // eslint-disable-next-line no-underscore-dangle
-    ctr.prototype.__prefix = prefix;
+    ctr.prototype.__extolPrefix = prefix;
   };
 };
 
