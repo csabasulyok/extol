@@ -93,23 +93,13 @@ export const load = <T = string>(propertyKey: string | symbol, defaultValue: T =
  */
 const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
   return (target: unknown, propertyKey: string | symbol) => {
-    let initialized = false;
-    let value: T;
-    // target[propertyKey] = defaultValue;
-    Object.defineProperty(target, propertyKey, {
-      get: () => {
-        if (!initialized) {
-          // check if prefix added
-          const prefix = (target as Record<string, unknown>)?.__prefix as string;
-          if (prefix) {
-            options.envVarPrefix = options.envVarPrefix || prefix;
-          }
-          value = load(propertyKey, defaultValue, options);
-          initialized = true;
-        }
-        return value;
-      },
-    });
+    // check if prefix added
+    const prefix = (target as Record<string, unknown>)?.__prefix as string;
+    if (prefix) {
+      options.envVarPrefix = options.envVarPrefix || prefix;
+    }
+    const value = load(propertyKey, defaultValue, options);
+    target[propertyKey] = value;
   };
 };
 
