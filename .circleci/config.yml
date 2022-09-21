@@ -19,8 +19,8 @@ jobs:
           name: Install dependencies
           command: pnpm i
       - run:
-          name: Run linters
-          command: pnpm lint
+          name: Run linters & compile
+          command: pnpm ci
 
       - save_cache:
           paths:
@@ -54,7 +54,7 @@ jobs:
           command: pnpm build
       - run:
           name: Publish to registry
-          command: pnpm publish
+          command: pnpm publish --registry=https://registry.npmjs.org/
 
       - save_cache:
           paths:

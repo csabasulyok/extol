@@ -62,9 +62,15 @@ export const fileVariant = (envVarName: string): string => {
  * De-facto configuration loading.
  * Should be called only once for each key/setting.
  */
-export const load = <T = string>(propertyKey: string | symbol, defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): T => {
+export const load = <T = string>(
+  propertyKey: string | symbol,
+  defaultValue: T = undefined,
+  options: ExtolDecoratorProperties = {},
+): T => {
   // decide environment variable name
-  const finalPropertyKey = options.envVarPrefix ? `${options.envVarPrefix}_${String(propertyKey)}` : String(propertyKey);
+  const finalPropertyKey = options.envVarPrefix
+    ? `${options.envVarPrefix}_${String(propertyKey)}`
+    : String(propertyKey);
   const envVarName = options.envVarName || constantCase(finalPropertyKey);
 
   // get string version from file content or environment variable
