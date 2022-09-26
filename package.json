@@ -31,7 +31,6 @@
     "example:decoratorprefix": "DOTENV_CONFIG_PATH=./examples/prefixed.env ts-node -r dotenv/config examples/decoratorprefix.example.ts"
   },
   "dependencies": {
-    "auto-bind": "5.0.1",
     "change-case": "4.1.2",
     "dotenv": "16.0.2"
   },
