@@ -18,7 +18,7 @@
       "ScriptHost",
       "ES2020"
     ],
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": false,
     "noFallthroughCasesInSwitch": true,
@@ -44,7 +44,7 @@
     "types": [
       "node"
     ],
-    "useDefineForClassFields": true
+    "useDefineForClassFields": false
   },
   "include": [
     "src/**/*.ts",
