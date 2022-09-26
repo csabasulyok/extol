@@ -1,6 +1,6 @@
 {
   "name": "extol",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Simple decorator-driven TypeScript externalization library",
   "author": "Csaba Sulyok <csaba.sulyok@gmail.com>",
   "license": "ISC",
@@ -25,10 +25,10 @@
     "format": "prettier --write '**/*.ts' --config ./.prettierrc.yml",
     "ci": "pnpm lint && pnpm format && pnpm build",
     "publish:local": "pnpm publish --registry=http://localhost:8081/repository/npm-releases/",
-    "example:simple": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/simple.example.ts",
-    "example:simpleobject": "DOTENV_CONFIG_PATH=./examples/prefixed.env node -r ts-node/register -r dotenv/config examples/simpleobject.example.ts",
-    "example:decorator": "DOTENV_CONFIG_PATH=./examples/simple.env node -r ts-node/register -r dotenv/config examples/decorator.example.ts",
-    "example:decoratorprefix": "DOTENV_CONFIG_PATH=./examples/prefixed.env node -r ts-node/register -r dotenv/config examples/decoratorprefix.example.ts"
+    "example:simple": "DOTENV_CONFIG_PATH=./examples/simple.env ts-node -r dotenv/config examples/simple.example.ts",
+    "example:simpleobject": "DOTENV_CONFIG_PATH=./examples/prefixed.env ts-node -r dotenv/config examples/simpleobject.example.ts",
+    "example:decorator": "DOTENV_CONFIG_PATH=./examples/simple.env ts-node -r dotenv/config examples/decorator.example.ts",
+    "example:decoratorprefix": "DOTENV_CONFIG_PATH=./examples/prefixed.env ts-node -r dotenv/config examples/decoratorprefix.example.ts"
   },
   "dependencies": {
     "auto-bind": "5.0.1",
