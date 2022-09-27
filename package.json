@@ -1,6 +1,6 @@
 {
   "name": "extol",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Simple decorator-driven TypeScript externalization library",
   "author": "Csaba Sulyok <csaba.sulyok@gmail.com>",
   "license": "ISC",
