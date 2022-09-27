@@ -54,7 +54,7 @@ jobs:
           command: pnpm build
       - run:
           name: Publish to registry
-          command: pnpm publish --registry=https://registry.npmjs.org/
+          command: pnpm publish:npmjs
 
       - save_cache:
           paths:
