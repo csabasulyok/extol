@@ -1,6 +1,6 @@
 import { constantCase } from 'change-case';
-import fs from 'fs';
 import dotenv from 'dotenv';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -29,6 +29,12 @@ export type ExtolDecoratorProperties = {
    * and as a file with the env var containing the file name.
    */
   fileVariant?: boolean;
+  /**
+   * Set to true so key will not be overwritable wihin an object,
+   * Only 'get' is defined this way, otherwise only the initial value
+   * setting is handled by extol.
+   */
+  readOnly?: boolean;
 };
 
 /**
@@ -133,7 +139,12 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
     }
     target.constructor.prototype.__extolProps.push(propertyKey);
 
-    // target[propertyKey] = defaultValue;
+    // simply add key if mutability needs to be guaranteed
+    if (!options.readOnly) {
+      target[propertyKey] = defaultValue;
+      return;
+    }
+
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (!initialized) {

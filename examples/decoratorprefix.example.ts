@@ -11,7 +11,7 @@ class ExampleConfiguration extends WithExtolProps<ExampleConfiguration> {
   @extol(5672)
   port: number;
 
-  @extol('guest')
+  @extol('guest', { readOnly: true })
   username: string;
 }
 
@@ -19,4 +19,6 @@ class ExampleConfiguration extends WithExtolProps<ExampleConfiguration> {
  * Default instance
  */
 const c = new ExampleConfiguration();
+c.port = 5673;
+// c.username = 'unwritable';
 console.log(c.extolProps());
