@@ -72,6 +72,8 @@ workflows:
       - lint
       - publish:
           context: npm-registry
+          requires:
+            - lint
           filters:
             branches:
               only: main
