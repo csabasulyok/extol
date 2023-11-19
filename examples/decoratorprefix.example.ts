@@ -19,6 +19,15 @@ class ExampleConfiguration extends WithExtolProps<ExampleConfiguration> {
  * Default instance
  */
 const c = new ExampleConfiguration();
+
+// overwrite port
 c.port = 5673;
-// c.username = 'unwritable';
+
+// cannot overwrite readOnly username
+try {
+  c.username = 'unwritable';
+} catch (ex) {
+  console.log('As expected: Could not overwrite username');
+}
+
 console.log(c.extolProps());

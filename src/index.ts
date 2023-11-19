@@ -139,12 +139,6 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
     }
     target.constructor.prototype.__extolProps.push(propertyKey);
 
-    // simply add key if mutability needs to be guaranteed
-    if (!options.readOnly) {
-      target[propertyKey] = defaultValue;
-      return;
-    }
-
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (!initialized) {
@@ -155,9 +149,17 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
           }
           value = load(propertyKey, defaultValue, options);
           initialized = true;
+          // console.log(`EXTOL: loading ${String(propertyKey)}=${value}`);
         }
         return value;
       },
+      set: options.readOnly
+        ? undefined
+        : (newValue: T) => {
+            // this overrides everything so set flag even if never read before
+            initialized = true;
+            value = newValue;
+          },
     });
   };
 };
