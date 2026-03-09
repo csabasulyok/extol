@@ -1,4 +1,12 @@
-import extol from '../src';
+#!/usr/bin/env tsx
+
+import dotenv from 'dotenv';
+import extol from '../src/index.js';
+
+// Load environment variables from demonstration .env file
+dotenv.config({
+  path: 'examples/simple.env',
+});
 
 /**
  * Example class to show automated externalization
@@ -47,7 +55,7 @@ class ExampleConfiguration {
   rememberPassword: boolean;
 
   @extol({}, { json: true, fileVariant: true })
-  extraArgs: { [key: string]: string };
+  extraArgs: Record<string, string>;
 
   toString(): string {
     return `ExampleConfiguration {

@@ -1,6 +1,6 @@
 import { constantCase } from 'change-case';
 import dotenv from 'dotenv';
-import fs from 'fs';
+import fs from 'node:fs';
 
 dotenv.config();
 
@@ -52,7 +52,7 @@ export type ExtolObjectDecoratorProperties = {
  * Check if _FILE suffixed version is set for a given environment variable.
  * If so, read its value into a string, otherwise check the original env var.
  */
-export const fileVariant = (envVarName: string): string => {
+export const fileVariant = (envVarName: string): string | undefined => {
   const fileEnvVarName = `${envVarName}_FILE`;
   const fileEnvVar = process.env[fileEnvVarName];
 
@@ -70,44 +70,39 @@ export const fileVariant = (envVarName: string): string => {
  */
 export const load = <T = string>(
   propertyKey: string | symbol,
-  defaultValue: T = undefined,
+  defaultValue: T,
   options: ExtolDecoratorProperties = {},
 ): T => {
   // decide environment variable name
   const finalPropertyKey = options.envVarPrefix
     ? `${options.envVarPrefix}_${String(propertyKey)}`
     : String(propertyKey);
-  const envVarName = options.envVarName || constantCase(finalPropertyKey);
+  const envVarName = options.envVarName ?? constantCase(finalPropertyKey);
 
   // get string version from file content or environment variable
-  let stringValue: string;
-  if (options.fileVariant) {
-    stringValue = fileVariant(envVarName);
-  } else {
-    stringValue = process.env[envVarName];
-  }
+  const stringValue = options.fileVariant ? fileVariant(envVarName) : process.env[envVarName];
 
-  let value: T;
+  let value: T | undefined = undefined;
 
   // if externalized string version was read, cast to correct type
   if (stringValue) {
     // if JSON, deserialize
     if (options.json) {
       try {
-        value = JSON.parse(stringValue);
-      } catch (ex) {
+        value = JSON.parse(stringValue) as T;
+      } catch {
         console.warn(`Could not load JSON config from ${envVarName}, regressing to default...`);
         // regress to default
       }
     } else {
       // if non-JSON externalized value, make it same type as default value
-      const caster = defaultValue?.constructor || String;
-      value = caster(stringValue);
+      const caster = defaultValue?.constructor ?? String;
+      value = caster(stringValue) as T;
     }
   }
 
   // check if anything overwrote the default value, otherwise regress to it
-  return value !== undefined ? value : defaultValue;
+  return value ?? defaultValue;
 };
 
 /**
@@ -118,34 +113,50 @@ export const loadObject = (
   options: ExtolObjectDecoratorProperties = {},
 ): Record<string, unknown> => {
   const keysToDefaultEntries = Object.entries(keysToDefault);
-  const keysToValueEntries = keysToDefaultEntries.map(([key, val]) => [key, load(key, val, options)]);
+  const keysToValueEntries = keysToDefaultEntries.map(
+    ([key, val]) => [key, load(key, val, options)] as [string, unknown],
+  );
   const keysToValues = Object.fromEntries(keysToValueEntries);
   return keysToValues;
+};
+
+/**
+ * Type for class constructor with extol props, used to type the constructor of target of property decorator.
+ */
+export type WithExtolPropsConstructor = {
+  prototype: {
+    __extolProps?: (string | symbol)[];
+    __extolPrefix?: string;
+  };
+};
+
+/**
+ * Type for class with extol props, used to type the target of property decorator.
+ */
+export type WithExtolPropsType = object & {
+  constructor: WithExtolPropsConstructor;
 };
 
 /**
  * Property decorator function to auto-load prop value
  * from environment variable or file.
  */
-const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  return (target: Object, propertyKey: string | symbol) => {
+const extol = <T>(defaultValue: T, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
+  return (target: WithExtolPropsType, propertyKey: string | symbol) => {
     let initialized = false;
-    let value: T;
+    let value: T | undefined;
 
     // add managed key to prototype list
-    if (!target.constructor.prototype.__extolProps) {
-      target.constructor.prototype.__extolProps = [];
-    }
+    target.constructor.prototype.__extolProps ??= [];
     target.constructor.prototype.__extolProps.push(propertyKey);
 
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (!initialized) {
           // check if prefix added
-          const prefix = target.constructor.prototype.__extolPrefix as string;
+          const prefix = target.constructor.prototype.__extolPrefix;
           if (prefix) {
-            options.envVarPrefix = options.envVarPrefix || prefix;
+            options.envVarPrefix = options.envVarPrefix ?? prefix;
           }
           value = load(propertyKey, defaultValue, options);
           initialized = true;
@@ -166,7 +177,7 @@ const extol = <T>(defaultValue: T = undefined, options: ExtolDecoratorProperties
 
 export abstract class WithExtolProps<T> {
   extolProps(): T {
-    const propsList = this.constructor?.prototype?.__extolProps;
+    const propsList = (this as WithExtolPropsType).constructor?.prototype?.__extolProps;
     if (!propsList) {
       return {} as T;
     }
@@ -178,10 +189,9 @@ export abstract class WithExtolProps<T> {
  * Class decorator, which sets prefix for any extoled value in class
  */
 export const extolPrefix = (prefix: string): ClassDecorator => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   return (ctr: Function) => {
-    // eslint-disable-next-line no-underscore-dangle
-    ctr.prototype.__extolPrefix = prefix;
+    (ctr as WithExtolPropsConstructor).prototype.__extolPrefix = prefix;
   };
 };
 

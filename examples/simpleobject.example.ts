@@ -1,4 +1,12 @@
-import { loadObject } from '../src';
+#!/usr/bin/env tsx
+
+import dotenv from 'dotenv';
+import { loadObject } from '../src/index.js';
+
+// Load environment variables from demonstration .env file
+dotenv.config({
+  path: 'examples/prefixed.env',
+});
 
 /**
  * loadObject takes a key-to-defaultvalue map

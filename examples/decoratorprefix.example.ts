@@ -1,4 +1,12 @@
-import extol, { extolPrefix, WithExtolProps } from '../src';
+#!/usr/bin/env tsx
+
+import dotenv from 'dotenv';
+import extol, { extolPrefix, WithExtolProps } from '../src/index.js';
+
+// Load environment variables from demonstration .env file
+dotenv.config({
+  path: 'examples/prefixed.env',
+});
 
 /**
  * Example class to show automated externalization
@@ -26,8 +34,8 @@ c.port = 5673;
 // cannot overwrite readOnly username
 try {
   c.username = 'unwritable';
-} catch (ex) {
-  console.log('As expected: Could not overwrite username');
+} catch (error) {
+  console.log('As expected: Could not overwrite username', error);
 }
 
 console.log(c.extolProps());
