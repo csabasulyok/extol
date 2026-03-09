@@ -54,6 +54,12 @@ class ExampleConfiguration {
   @extol(false, { json: true })
   rememberPassword: boolean;
 
+  /**
+   * Default value can be left empty, in which case it is undefined
+   */
+  @extol()
+  additionalInfo?: string;
+
   @extol({}, { json: true, fileVariant: true })
   extraArgs: Record<string, string>;
 
@@ -64,7 +70,8 @@ class ExampleConfiguration {
       protocol: ${this.protocol}, type=${this.protocol?.constructor?.name},
       username: ${this.username}, type=${this.username?.constructor?.name},
       password: ${this.password}, type=${this.password?.constructor?.name},
-      rememberPassword: ${this.rememberPassword}, type=${this.rememberPassword?.constructor?.name}
+      rememberPassword: ${this.rememberPassword}, type=${this.rememberPassword?.constructor?.name},
+      additionalInfo: ${this.additionalInfo}, type=${this.additionalInfo?.constructor?.name},
       extraArgs: ${JSON.stringify(this.extraArgs || {})}, type=${this.extraArgs?.constructor?.name},
     }`;
   }

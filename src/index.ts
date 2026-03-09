@@ -141,7 +141,7 @@ export type WithExtolPropsType = object & {
  * Property decorator function to auto-load prop value
  * from environment variable or file.
  */
-const extol = <T>(defaultValue: T, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
+const extol = <T>(defaultValue?: T, options: ExtolDecoratorProperties = {}): PropertyDecorator => {
   return (target: WithExtolPropsType, propertyKey: string | symbol) => {
     let initialized = false;
     let value: T | undefined;
