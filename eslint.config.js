@@ -106,6 +106,7 @@ export default defineConfig(
       'n/hashbang': [
         'error',
         {
+          ignoreUnpublished: true,
           executableMap: {
             '.js': 'node',
             '.ts': 'tsx',
