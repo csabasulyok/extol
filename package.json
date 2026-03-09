@@ -1,6 +1,6 @@
 {
   "name": "extol",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Simple decorator-driven TypeScript externalization library",
   "author": "Csaba Sulyok <csaba.sulyok@gmail.com>",
   "license": "ISC",
@@ -28,7 +28,7 @@
     "clean": "rimraf dist *.tsbuildinfo",
     "build": "tsc -p tsconfig.build.json",
     "cb": "pnpm clean && pnpm build",
-    "lint": "eslint 'src/**/*.ts' --quiet --fix",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write '**/*.ts' --config ./.prettierrc.yml",
     "format:check": "prettier --check .",
