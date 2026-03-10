@@ -79,7 +79,7 @@ export default defineConfig(
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true, ignoreVoid: true }],
       '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
-      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
       '@typescript-eslint/prefer-optional-chain': 'error',
@@ -107,6 +107,7 @@ export default defineConfig(
         'error',
         {
           ignoreUnpublished: true,
+          additionalExecutables: ['bin/*.ts'],
           executableMap: {
             '.js': 'node',
             '.ts': 'tsx',
