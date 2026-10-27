@@ -2,6 +2,8 @@ import { constantCase } from 'change-case';
 import dotenv from 'dotenv';
 import fs from 'node:fs';
 
+// loading .env on import is intended, see README
+// eslint-disable-next-line unicorn/no-top-level-side-effects
 dotenv.config();
 
 /**
@@ -56,12 +58,10 @@ export const fileVariant = (envVarName: string): string | undefined => {
   const fileEnvVarName = `${envVarName}_FILE`;
   const fileEnvVar = process.env[fileEnvVarName];
 
-  if (!fileEnvVar || !fs.existsSync(fileEnvVar)) {
-    // file variant not provided or file doesn't exist, return regular env var
-    return process.env[envVarName];
-  }
-
-  return fs.readFileSync(fileEnvVar).toString().trim();
+  // file variant not provided or file doesn't exist, return regular env var
+  return !fileEnvVar || !fs.existsSync(fileEnvVar)
+    ? process.env[envVarName]
+    : fs.readFileSync(fileEnvVar).toString().trim();
 };
 
 /**
@@ -82,7 +82,7 @@ export const load = <T = string>(
   // get string version from file content or environment variable
   const stringValue = options.fileVariant ? fileVariant(envVarName) : process.env[envVarName];
 
-  let value: T | undefined = undefined;
+  let value: T | undefined;
 
   // if externalized string version was read, cast to correct type
   if (stringValue) {
@@ -156,7 +156,7 @@ const extol = <T>(defaultValue?: T, options: ExtolDecoratorProperties = {}): Pro
           // check if prefix added
           const prefix = target.constructor.prototype.__extolPrefix;
           if (prefix) {
-            options.envVarPrefix = options.envVarPrefix ?? prefix;
+            options.envVarPrefix ??= prefix;
           }
           value = load(propertyKey, defaultValue, options);
           initialized = true;
@@ -178,10 +178,7 @@ const extol = <T>(defaultValue?: T, options: ExtolDecoratorProperties = {}): Pro
 export abstract class WithExtolProps<T> {
   extolProps(): T {
     const propsList = (this as WithExtolPropsType).constructor?.prototype?.__extolProps;
-    if (!propsList) {
-      return {} as T;
-    }
-    return Object.fromEntries(propsList.map((key) => [key, this[key]])) as T;
+    return !propsList ? ({} as T) : (Object.fromEntries(propsList.map((key) => [key, this[key]])) as T);
   }
 }
 
