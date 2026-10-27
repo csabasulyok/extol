@@ -19,7 +19,7 @@ npm i extol
 
 ### Decorators
 
-- run `npm run example:decorators`
+- run `npm run example:decorator`
 
 ```ts
 import extol from 'extol';
