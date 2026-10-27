@@ -30,9 +30,9 @@
     "cb": "pnpm clean && pnpm build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write '**/*.ts' --config ./.prettierrc.yml",
+    "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "ci": "pnpm lint && pnpm format && pnpm build",
+    "ci": "pnpm lint && pnpm format:check && pnpm build",
     "publish:local": "pnpm publish --verbose --registry=http://localhost:8081/repository/npm-releases/",
     "publish:npmjs": "pnpm publish --verbose --registry=https://registry.npmjs.org/",
     "example:simple": "tsx examples/simple.example.ts",
@@ -60,16 +60,5 @@
     "tsx": "4.23.15",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0"
-  },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx}": [
-      "npm run lint",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }

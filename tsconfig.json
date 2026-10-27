@@ -14,10 +14,7 @@
     "importHelpers": false,
     "incremental": true,
     "isolatedModules": true,
-    "lib": [
-      "ScriptHost",
-      "esnext"
-    ],
+    "lib": ["ScriptHost", "esnext"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": false,
@@ -41,17 +38,9 @@
     "strictPropertyInitialization": false,
     "stripInternal": true,
     "target": "ESNext",
-    "types": [
-      "node"
-    ],
-    "useDefineForClassFields": false,
+    "types": ["node"],
+    "useDefineForClassFields": false
   },
-  "include": [
-    "src/**/*.ts",
-    "examples/**/*.ts",
-    "typings.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "examples/**/*.ts", "typings.d.ts"],
+  "exclude": ["node_modules"]
 }
