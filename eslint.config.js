@@ -118,7 +118,7 @@ export default defineConfig(
       // Enforce kebab-case filenames (standard Node.js convention)
       'unicorn/filename-case': ['error', { case: 'kebabCase' }],
       // Prefer for...of over forEach
-      'unicorn/no-array-for-each': 'error',
+      'unicorn/no-for-each': 'error',
       // Bans require(), __dirname, __filename (already ESM)
       'unicorn/prefer-module': 'error',
       // Prefer node: protocol — redundant with n/prefer-node-protocol but belt-and-suspenders
@@ -128,6 +128,10 @@ export default defineConfig(
       // These unicorn rules conflict with our style or typescript-eslint equivalents
       'unicorn/no-null': 'off', // TypeScript APIs use null legitimately
       'unicorn/prevent-abbreviations': 'off', // Too noisy for a codebase with established names
+      'unicorn/name-replacements': 'off', // Successor of prevent-abbreviations, same reasoning
+      'unicorn/consistent-boolean-name': 'off', // Names mirror external APIs and DTO fields
+      'unicorn/consistent-compound-words': 'off', // Names mirror external APIs and DTO fields
+      'unicorn/no-asterisk-prefix-in-documentation-comments': 'off', // Keep conventional JSDoc style
       'unicorn/no-negated-condition': 'off', // Sometimes clearer to negate a condition than to invert the whole logic
       'unicorn/no-array-reduce': 'off', // Sometimes reduce is clearer than a for loop or map+filter+etc.
       'unicorn/no-process-exit': 'off', // Legitimate in CLI tools
